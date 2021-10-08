@@ -1,0 +1,29 @@
+{
+  "name": "exttime",
+  "version": "1.0.0",
+  "description": "Extract date time from sentences",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dubey98/exttime.git"
+  },
+  "keywords": [
+    "datetime",
+    "time"
+  ],
+  "author": "Shiv Dubey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dubey98/exttime/issues"
+  },
+  "homepage": "https://github.com/dubey98/exttime#readme",
+  "devDependencies": {
+    "jest": "^27.2.5"
+  },
+  "dependencies": {
+    "date-fns": "^2.25.0"
+  }
+}
