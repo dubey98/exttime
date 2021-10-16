@@ -1,13 +1,20 @@
 const datefns = require("date-fns");
 const C = require("./constants");
 
-module.exports = function processText(input) {
+/**
+ * takes an input string and finds whether it has any date and time contents in it
+ * @param {String} input
+ * @returns {Date} if the string contains dat part then date else null
+ */
+function processText(input) {
   if (typeof input !== "string") {
     throw new Error("The input must be a string");
     return;
   }
 
   const regexResult = extractDateTimeGroups(input);
+  const matchedValue =
+    regexResult && regexResult[0].trim() !== "" && regexResult[0].trim();
   const groups = regexResult ? regexResult.groups : {};
   let retValue = null;
   for (let [key, value] of Object.entries(groups)) {
@@ -17,8 +24,8 @@ module.exports = function processText(input) {
       retValue = setTime(retValue, key.toString(), value.toString().trim());
     }
   }
-  return retValue;
-};
+  return [retValue, matchedValue];
+}
 
 function extractDateTimeGroups(input) {
   const dayPrefixRegex = getDayPrefix();
@@ -145,3 +152,5 @@ function setDate(dateValue) {
   retDate = new Date(retDate.setHours(9, 0, 0, 0));
   return retDate;
 }
+
+module.exports = processText;
