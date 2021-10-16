@@ -7,61 +7,141 @@ module.exports = function processText(input) {
     return;
   }
 
-  let retValue = new Date();
-
-  retValue = checkForToday(input);
-
+  const regexResult = extractDateTimeGroups(input);
+  const groups = regexResult ? regexResult.groups : {};
+  let retValue = null;
+  for (let [key, value] of Object.entries(groups)) {
+    if (matchIfDateKey(key) && typeof value !== "undefined") {
+      retValue = setDate(key.toString());
+    } else if (matchIfTimeKey(key) && typeof value !== "undefined") {
+      retValue = setTime(retValue, key.toString(), value.toString().trim());
+    }
+  }
   return retValue;
 };
 
-function checkForToday(input) {
+function extractDateTimeGroups(input) {
   const dayPrefixRegex = getDayPrefix();
-  const timeREgex = getTimeRegex();
+  const timeRegex = getTimeRegex();
 
   const r = new RegExp(
     dayPrefixRegex.source +
+      "+" +
       "(" +
       C.adjectiveStr.source +
-      timeREgex.source +
+      timeRegex.source +
       ")" +
       C.regModifier.zeroOrOne,
     "gi"
   );
-  return input.match(r);
+  return r.exec(input);
 }
 
 function getDayPrefix() {
   return new RegExp(
-    C.regModifier.bracketStart +
+    "(" +
       C.todayStr.source +
-      C.regModifier.or +
+      "|" +
       C.tomorrowStr.source +
-      C.regModifier.or +
+      "|" +
       C.monStr.source +
-      C.regModifier.or +
+      "|" +
       C.tuesStr.source +
-      C.regModifier.or +
+      "|" +
       C.thursStr.source +
-      C.regModifier.or +
+      "|" +
       C.friDay.source +
-      C.regModifier.or +
+      "|" +
       C.satStr.source +
-      C.regModifier.or +
+      "|" +
       C.sunStr.source +
-      C.regModifier.bracketEnd
+      ")"
   );
 }
 
 function getTimeRegex() {
   return new RegExp(
-    C.regModifier.bracketStart +
+    "(" +
       C.singleDigitTime.source +
-      C.regModifier.or +
+      "|" +
       C.doubleDigitTime.source +
-      C.regModifier.or +
+      "|" +
       C.timeWithMinutes.source +
-      C.regModifier.or +
+      "|" +
       C.timeWithMinuteAndAmPm.source +
-      C.regModifier.bracketEnd
+      ")"
   );
+}
+
+function matchIfDateKey(key) {
+  return C.dateArray.find((date) => date === key.toString());
+}
+
+function matchIfTimeKey(key) {
+  return C.timeArray.find((timeKey) => timeKey === key.toString());
+}
+
+function setTime(dateTime, key, value) {
+  switch (key) {
+    case "time1":
+      dateTime = datefns.setHours(dateTime, parseInt(value));
+      break;
+    case "time2":
+      dateTime = datefns.setHours(dateTime, parseInt(value));
+      break;
+    case "time3":
+      const hrs = parseInt(value.split(":")[0]);
+      const min = parseInt(value.split(":")[1]);
+      dateTime = datefns.setHours(dateTime, hrs);
+      dateTime = datefns.setMinutes(dateTime, min);
+      break;
+    case "time4":
+      const timePart = value.split(":")[1];
+      let hrs2 = parseInt(value.split(":")[0]);
+      const isPM = timePart.match(/pm/i);
+      const min2 = String(timePart).replace(/am|pm/i, "");
+      if (isPM && hrs2 <= 12) hrs2 += 12;
+      dateTime = datefns.setHours(dateTime, hrs2);
+      dateTime = datefns.setMinutes(dateTime, min2);
+      break;
+    default:
+      break;
+  }
+  return dateTime;
+}
+
+function setDate(dateValue) {
+  let retDate = new Date();
+  switch (dateValue) {
+    case "today":
+      break;
+    case "tomorrow":
+      retDate = datefns.addDays(retDate, 1);
+      break;
+    case "monday":
+      retDate = datefns.nextMonday(retDate);
+      break;
+    case "tuesday":
+      retDate = datefns.nextTuesday(retDate);
+      break;
+    case "wednesday":
+      retDate = datefns.nextWednesday(retDate);
+      break;
+    case "thursday":
+      retDate = datefns.nextThursday(retDate);
+      break;
+    case "friday":
+      retDate = datefns.nextFriday(retDate);
+      break;
+    case "saturday":
+      retDate = datefns.nextSaturday(retDate);
+      break;
+    case "sunday":
+      retDate = datefns.nextSunday(retDate);
+      break;
+    default:
+      break;
+  }
+  retDate = new Date(retDate.setHours(9, 0, 0, 0));
+  return retDate;
 }
