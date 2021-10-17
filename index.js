@@ -12,19 +12,25 @@ function processText(input) {
     return;
   }
 
-  const regexResult = extractDateTimeGroups(input);
-  const matchedValue =
-    regexResult && regexResult[0].trim() !== "" && regexResult[0].trim();
-  const groups = regexResult ? regexResult.groups : {};
-  let retValue = null;
-  for (let [key, value] of Object.entries(groups)) {
-    if (matchIfDateKey(key) && typeof value !== "undefined") {
-      retValue = setDate(key.toString());
-    } else if (matchIfTimeKey(key) && typeof value !== "undefined") {
-      retValue = setTime(retValue, key.toString(), value.toString().trim());
+  const searchResult = extractDateTimeGroups(input);
+  const retValue = [];
+  searchResult.forEach((result) => {
+    const matchedText = result[0].trim();
+    let dateTime = null;
+    for (let [key, value] of Object.entries(result.groups)) {
+      if (matchIfDateKey(key) && typeof value !== "undefined") {
+        dateTime = setDate(key.toString());
+      } else if (matchIfTimeKey(key) && typeof value !== "undefined") {
+        dateTime = setTime(dateTime, key.toString(), value.toString().trim());
+      }
     }
-  }
-  return [retValue, matchedValue];
+    retValue.push({
+      dateTime: dateTime,
+      matchedText: matchedText,
+    });
+  });
+
+  return retValue;
 }
 
 function extractDateTimeGroups(input) {
@@ -41,7 +47,13 @@ function extractDateTimeGroups(input) {
       C.regModifier.zeroOrOne,
     "gi"
   );
-  return r.exec(input);
+  const searchResult = [];
+  let result = null;
+  while ((result = r.exec(input))) {
+    searchResult.push(result);
+    result = null;
+  }
+  return searchResult;
 }
 
 function getDayPrefix() {
