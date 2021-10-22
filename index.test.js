@@ -85,7 +85,7 @@ test("catches one mon from the input", () => {
 test("bring milk tom at 11", () => {
   expect(index("catches time as tom at 11 ")).toStrictEqual([
     {
-      dateTime: new Date(datefns.nextMonday(new Date()).setHours(11, 0, 0, 0)),
+      dateTime: new Date(datefns.addDays(new Date().setHours(11, 0, 0, 0), 1)),
       matchedText: "tom at 11",
     },
   ]);
@@ -144,7 +144,7 @@ test("mathces today and tomorrow both and returns an array of them ", () => {
       matchedText: "today",
     },
     {
-      dateTime: new Date(datefns.nextMonday(new Date()).setHours(9, 0, 0, 0)),
+      dateTime: new Date(datefns.addDays(new Date().setHours(9, 0, 0, 0), 1)),
       matchedText: "tomorrow",
     },
   ]);
@@ -161,7 +161,7 @@ test("mathces today at 11 and tomorrow at 12:30am both and returns an array of t
       matchedText: "today at 11",
     },
     {
-      dateTime: new Date(datefns.nextMonday(new Date()).setHours(12, 30, 0, 0)),
+      dateTime: datefns.addDays(new Date().setHours(12, 30, 0, 0), 1),
       matchedText: "tomorrow at 12:30am",
     },
   ]);
