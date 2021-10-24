@@ -1,6 +1,30 @@
 const datefns = require("date-fns");
 const C = require("./constants");
 
+const todayStr = /(?<today>\btoday|tod\b)/;
+const tomorrowStr = /(?<tomorrow>\btomorrow|tom\b)/;
+const monStr = /(?<monday>\bmonday|mon\b)/;
+const tuesStr = /(?<tuesday>\btuesday|tue\b)/;
+const wedStr = /(?<wednesday>\bwednesday|Wed\b)/;
+const thursStr = /(?<thursday>\bthursday|thurs\b)/;
+const friDay = /(?<friday>\bfriday|fri\b)/;
+const satStr = /(?<saturday>\bsaturday|sat\b)/;
+const sunStr = /(?<sunday>\bsunday|sun\b)/;
+const adjectiveStr = /(?<adj>\sat|\sby|\son)?/;
+const singleDigitTime = /(?<time1>\s\d\b)/;
+const doubleDigitTime = /(?<time2>(\s[0-1][0-9]\s)|(\s[2][0-4]\s))/;
+const timeWithMinutes =
+  /(?<time3>(\s[0-1][0-9]:[0-5][0-9]\b)|(\s2[0-3]:[0-5][0-9]\b))/;
+const timeWithMinuteAndAmPm =
+  /(?<time4>(\s[0-1][0-9]:[0-5][0-9](am|pm)\b)|(\s2[0-3]:[0-5][0-9](am|pm)\b))/;
+const regModifier = {
+  or: "|",
+  zeroOrOne: "?",
+  bracketStart: "(",
+  bracketEnd: ")",
+  oneOrMore: "+",
+};
+
 /**
  * takes an input string and finds whether it has any date and time contents in it
  * @param {String} input
@@ -41,10 +65,10 @@ function extractDateTimeGroups(input) {
     dayPrefixRegex.source +
       "+" +
       "(" +
-      C.adjectiveStr.source +
+      adjectiveStr.source +
       timeRegex.source +
       ")" +
-      C.regModifier.zeroOrOne,
+      regModifier.zeroOrOne,
     "gi"
   );
   const searchResult = [];
@@ -59,21 +83,21 @@ function extractDateTimeGroups(input) {
 function getDayPrefix() {
   return new RegExp(
     "(" +
-      C.todayStr.source +
+      todayStr.source +
       "|" +
-      C.tomorrowStr.source +
+      tomorrowStr.source +
       "|" +
-      C.monStr.source +
+      monStr.source +
       "|" +
-      C.tuesStr.source +
+      tuesStr.source +
       "|" +
-      C.thursStr.source +
+      thursStr.source +
       "|" +
-      C.friDay.source +
+      friDay.source +
       "|" +
-      C.satStr.source +
+      satStr.source +
       "|" +
-      C.sunStr.source +
+      sunStr.source +
       ")"
   );
 }
@@ -81,13 +105,13 @@ function getDayPrefix() {
 function getTimeRegex() {
   return new RegExp(
     "(" +
-      C.singleDigitTime.source +
+      singleDigitTime.source +
       "|" +
-      C.doubleDigitTime.source +
+      doubleDigitTime.source +
       "|" +
-      C.timeWithMinutes.source +
+      timeWithMinutes.source +
       "|" +
-      C.timeWithMinuteAndAmPm.source +
+      timeWithMinuteAndAmPm.source +
       ")"
   );
 }

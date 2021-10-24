@@ -1,30 +1,6 @@
 exports.dtRegex =
   /(\btoday|tod\b)?((\sat|by|on\s)((\s\d\b)|(\s[0-1][0-9]\s)|(\s[2][0-4]\s)|(\s[0-1][0-9]:[0-5][0-9]\b)|(\s2[0-3]:[0-5][0-9]\b)|(\s[0-1][0-9]:[0-5][0-9](am|pm)\b)|(\s2[0-3]:[0-5][0-9](am|pm)\b)))?/gi;
 
-exports.todayStr = /(?<today>\btoday|tod\b)/;
-exports.tomorrowStr = /(?<tomorrow>\btomorrow|tom\b)/;
-exports.monStr = /(?<monday>\bmonday|mon\b)/;
-exports.tuesStr = /(?<tuesday>\btuesday|tue\b)/;
-exports.wedStr = /(?<wednesday>\bwednesday|Wed\b)/;
-exports.thursStr = /(?<thursday>\bthursday|thurs\b)/;
-exports.friDay = /(?<friday>\bfriday|fri\b)/;
-exports.satStr = /(?<saturday>\bsaturday|sat\b)/;
-exports.sunStr = /(?<sunday>\bsunday|sun\b)/;
-exports.adjectiveStr = /(?<adj>\sat|\sby|\son)?/;
-exports.singleDigitTime = /(?<time1>\s\d\b)/;
-exports.doubleDigitTime = /(?<time2>(\s[0-1][0-9]\s)|(\s[2][0-4]\s))/;
-exports.timeWithMinutes =
-  /(?<time3>(\s[0-1][0-9]:[0-5][0-9]\b)|(\s2[0-3]:[0-5][0-9]\b))/;
-exports.timeWithMinuteAndAmPm =
-  /(?<time4>(\s[0-1][0-9]:[0-5][0-9](am|pm)\b)|(\s2[0-3]:[0-5][0-9](am|pm)\b))/;
-exports.regModifier = {
-  or: "|",
-  zeroOrOne: "?",
-  bracketStart: "(",
-  bracketEnd: ")",
-  oneOrMore: "+",
-};
-
 exports.dateArray = [
   "today",
   "tomorrow",
