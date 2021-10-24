@@ -1,6 +1,6 @@
 {
   "name": "exttime",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Extract date time from sentences",
   "main": "index.js",
   "scripts": {
